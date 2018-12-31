@@ -32,7 +32,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    String serverURI = "tcp://192.168.1.120:1883";
+    String serverURI = "tcp://www.apptechgateway.io:1883";
     MqttAndroidClient client;
     String clientId = "android_app";
     LocationManager locationManager;
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     // send details
     private void sendDetails(){
         String topic = "topic/analytics";
-        String payload = '{"clientId"}';
+        String payload = "{'clientId'}";
         byte[] encodedPayload = new byte[0];
         try {
             encodedPayload = payload.getBytes("UTF-8");
@@ -149,10 +149,10 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Log.d("LOCATION:", "Requesting location updates ...");
-//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, locationListener);
+//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
         lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        lastKnownLocation2 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//        lastKnownLocation2 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         Log.d("LOCATION", "Displaying last location ...");
 
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
 
     // subscribe method
     private void subscribe() {
-        String subscribeTopic = "topicgeneral";
+        String subscribeTopic = "topic/analytics";
         try {
             client.subscribe(subscribeTopic, 0, new IMqttMessageListener() {
                 @Override
