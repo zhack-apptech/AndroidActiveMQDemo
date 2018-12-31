@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     String serverURI = "tcp://www.apptechgateway.io:1883";
     MqttAndroidClient client;
     String clientId = "android_app";
+    String coordinates;
     LocationManager locationManager;
     Location currentLocation;
     Location lastKnownLocation;
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     private void sendDetails(){
         String topic = "topic/analytics";
         String payload = "{'clientId'}";
-        byte[] encodedPayload = new byte[0];
+        byte[] encodedPayload;
         try {
             encodedPayload = payload.getBytes("UTF-8");
             MqttMessage message = new MqttMessage(encodedPayload);
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         Log.d("LOCATION:", "Requesting location updates ...");
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, locationListener);
 //        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
         lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 //        lastKnownLocation2 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -162,14 +163,16 @@ public class MainActivity extends AppCompatActivity {
             coordinatesEditText.setText(coordinates);
         } else {
             if(lastKnownLocation != null) {
-                String coordinates = lastKnownLocation.getLatitude() + ", " + lastKnownLocation.getLongitude();
+//                String coordinates = lastKnownLocation.getLatitude() + ", " + lastKnownLocation.getLongitude();
+                coordinates = currentLocation.getLatitude() + ", " + currentLocation.getLongitude();
                 coordinatesEditText.setText(coordinates);
             }
         }
 
         // get device id
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        mobileIdEditText.setText(Settings.Secure.ANDROID_ID);
+        String deviceId = telephonyManager.getSubscriberId();
+        mobileIdEditText.setText(Settings.Secure.ANDROID_ID + " Subscriber ID: " + deviceId);
 
 
     }
